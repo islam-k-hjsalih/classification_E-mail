@@ -1,61 +1,70 @@
 import pandas as pd
+from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+import matplotlib.pyplot as plt
 
-# Load the dataset
+# تحميل الداتا
 file_path = r'C:\Users\hp\Desktop\spam_assassin.csv'
 data = pd.read_csv(file_path)
 
-# Display the first few rows and column names for exploration
+# طباعة البيانات والأعمدة
 print(data)
 print(data.columns)
 
-# Assuming the first column is 'email' and the second column is 'target'
-# Rename columns for easier access
+# إعادة تسمية الأعمدة
 data.columns = ['email', 'target']
 
-# Split the dataset into features and target variable
+# تقسيم البيانات إلى ميزات ومتغير الهدف
 X = data['email']
 y = data['target']
 
-# Split the data into training and testing sets
+# تقسيم البيانات إلى مجموعات تدريب واختبار
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Convert the email text into numerical data using CountVectorizer
+# تحويل نصوص البريد الإلكتروني إلى بيانات عددية باستخدام CountVectorizer
 vectorizer = CountVectorizer()
 X_train_vectorized = vectorizer.fit_transform(X_train)
 X_test_vectorized = vectorizer.transform(X_test)
 
-# Create a KNN classifier
-knn = KNeighborsClassifier(n_neighbors=5)  # You can choose the number of neighbors(k)
+# إنشاء مصنف KNN
+knn = KNeighborsClassifier(n_neighbors=5)
 
-# Fit the model
+# تدريب النموذج
 knn.fit(X_train_vectorized, y_train)
 
-# Make predictions
+# إجراء التنبؤات
 y_pred = knn.predict(X_test_vectorized)
 
-# Evaluate the model
+# تقييم النموذج
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
-# حساب عدد التنبؤات الصحيحة والخاطئة
 tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 
-# حساب نسبة الصواب والخطأ
-accuracy = (tp + tn) / (tp + tn + fp + fn)  # نسبة الصواب
-error_rate = (fp + fn) / (tp + tn + fp + fn)  # نسبة الخطأ
+accuracy = (tp + tn) / (tp + tn + fp + fn)  
+error_rate = (fp + fn) / (tp + tn + fp + fn)  
 
-print(f"نسبة الصواب: {accuracy * 100:.2f}%")
-print(f"نسبة الخطأ: {error_rate * 100:.2f}%")
+print(f"Accuracy :{accuracy * 100:.2f}%")
+print(f"Error Rate : {error_rate * 100:.2f}%")
 
+# تمثيل البيانات بالهيستوجرام
+# تجميع البيانات حسب "target"
+target_counts = data['target'].value_counts()
+
+# رسم الهيستوجرام
+plt.figure(figsize=(8, 5))
+target_counts.plot(kind='bar', color=['blue', 'orange'])
+plt.title('Number of Emails by Target')
+plt.xlabel('Target (Spam or Not Spam)')
+plt.ylabel('Number of Emails')
+plt.xticks(rotation=0)  # لتدوير تسميات المحور السيني
+plt.show()
 
 """
-
-
-*************************###OUTPUT###**************************
+op/java oop programs/ISALM_KHALEEL_HJSALIH/src/knnshow.py"
                                                    text  target
 0     From ilug-admin@linux.ie Mon Jul 29 11:28:02 2...       0
 1     From gort44@excite.com Mon Jun 24 17:54:21 200...       1
@@ -84,5 +93,4 @@ weighted avg       0.98      0.98      0.98      1160
 
 Accuracy :98.02%
 Error Rate : 1.98%
-
 """
