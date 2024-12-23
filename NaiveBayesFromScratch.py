@@ -91,3 +91,16 @@ plt.xlabel('Target (Spam or Not Spam)')
 plt.ylabel('Number of Emails')
 plt.xticks(rotation=0)  # لتدوير تسميات المحور السيني
 plt.show()
+"""
+precision    recall  f1-score   support
+
+           0       0.82      0.99      0.90       387
+           1       0.98      0.56      0.71       193
+
+    accuracy                           0.85       580
+   macro avg       0.90      0.78      0.81       580
+weighted avg       0.87      0.85      0.84       580
+
+Accuracy: 85.00%
+Error Rate: 15.00%
+"""
